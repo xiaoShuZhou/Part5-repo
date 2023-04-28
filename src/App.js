@@ -3,84 +3,9 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
-
-
-const LoginForm = ({ username, password, handleLogin, handleNameChange, handlePasswordChange }) => {
-
-  return (
-    <div>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={handleNameChange}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={handlePasswordChange}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
-    </div>
-  )
-}
-
-const AddBlogForm = ({ title, author, url, likes,handleAddBlog, handleTitleChange, handleAuthorChange, handleUrlChange, handleLikeChange }) => {
-  return (
-    <div>
-      <form onSubmit={handleAddBlog}>
-        <div>
-          title
-          <input
-            type="text"
-            value={title}
-            name="Title"
-            onChange={handleTitleChange}
-          />
-        </div>
-        <div>
-          author
-          <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={handleAuthorChange}
-          />
-        </div>
-        <div>
-          url
-          <input
-            type="text"
-            value={url}
-            name="Url"
-            onChange={handleUrlChange}
-          />
-        </div>
-        <div>
-          likes
-          <input
-            type="text"
-            value={likes}
-            name="Likes"
-            onChange={handleLikeChange}
-          />
-        </div>
-        <button type="submit">add blog</button>
-      </form>
-    </div>
-  )
-}
-
-
+import LoginForm from './components/LoginForm'
+import AddBlogForm from './components/AddBlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -89,10 +14,10 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-  const [likes, setLikes] = useState('')
+  // const [title, setTitle] = useState('')
+  // const [author, setAuthor] = useState('')
+  // const [url, setUrl] = useState('')
+  // const [likes, setLikes] = useState('')
 
 
   useEffect(() => {
@@ -118,7 +43,7 @@ const App = () => {
       })
       window.localStorage.setItem(
         'loggedBlogAppUser', JSON.stringify(user)
-      ) 
+      )
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -148,44 +73,40 @@ const App = () => {
     setUser(null)
   }
 
-  const handleAddBlog = async (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: title,
-      author: author,
-      url: url,
-      likes: likes
-    }
+  // const handleAddBlog = async (event) => {
+  //   event.preventDefault()
+  //   const blogObject = {
+  //     title: title,
+  //     author: author,
+  //     url: url,
+  //     likes: likes
+  //   }
+  //   const returnedBlog = await blogService.create(blogObject)
+  //   setBlogs(blogs.concat(returnedBlog))
+  //   setTitle('')
+  //   setAuthor('')
+  //   setUrl('')
+  //   setLikes('')
+  //   setNotification({
+  //     type: 'success',
+  //     text: `a new blog ${title} by ${author} added`
+  //   })
+  //   setTimeout(() => {
+  //     setNotification(null)
+  //   }, 5000)
+  // }
+  const handleAddBlog = async (blogObject) => {
     const returnedBlog = await blogService.create(blogObject)
     setBlogs(blogs.concat(returnedBlog))
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-    setLikes('')
     setNotification({
       type: 'success',
-      text: `a new blog ${title} by ${author} added`
+      // text: `a new blog ${title} by ${author} added`
     })
     setTimeout(() => {
       setNotification(null)
     }, 5000)
   }
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    setAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    setUrl(event.target.value)
-  }
-
-  const handleLikeChange = (event) => {
-    setLikes(event.target.value)
-  }
 
   return (
     <div>
@@ -197,24 +118,22 @@ const App = () => {
           handlePasswordChange={handlePasswordChange} />
         :
         <div>
-          <AddBlogForm title={title} author={author} url={url} likes={likes}
-          handleAddBlog={handleAddBlog}
-          handleTitleChange={handleTitleChange}
-          handleAuthorChange={handleAuthorChange}
-          handleUrlChange={handleUrlChange}
-          handleLikeChange={handleLikeChange}
-          ></AddBlogForm>
-        <div>
-          <p>{user.name} logged-in </p>
-          <button onClick={handleLogout} type="submit">logout</button>
-          <h2>blogs</h2>
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
-          )}
-        </div>
+          <Togglable buttonLabel='new blog'>
+            <AddBlogForm 
+              handleAddBlog={handleAddBlog}
+            />
+          </Togglable>
+          <div>
+            <p>{user.name} logged-in </p>
+            <button onClick={handleLogout} type="submit">logout</button>
+            <h2>blogs</h2>
+            {blogs.map(blog =>
+              <Blog key={blog.id} blog={blog} />
+            )}
+          </div>
         </div>}
     </div>
-    
+
   )
 }
 
