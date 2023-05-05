@@ -73,6 +73,16 @@ const App = () => {
     setUser(null)
   }
 
+  const handleLike = async (blog) => {
+    const likedBlog = await blogService.like(blog)
+    setBlogs(
+      blogs.map(blog =>
+        blog.id === likedBlog.id
+          ? { ...blog, likes: likedBlog.likes }
+          : blog
+      )
+    )
+  }
   // const handleAddBlog = async (event) => {
   //   event.preventDefault()
   //   const blogObject = {
@@ -107,6 +117,15 @@ const App = () => {
     }, 5000)
   }
 
+  const handleDeleteBlog = async (blog) => {
+    if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
+      await blogService.deleteBlog(blog)
+      setBlogs(
+        blogs.filter(currenetBlog => currenetBlog.id !== blog.id)
+      )
+    }
+  }
+
 
   return (
     <div>
@@ -119,7 +138,7 @@ const App = () => {
         :
         <div>
           <Togglable buttonLabel='new blog'>
-            <AddBlogForm 
+            <AddBlogForm
               handleAddBlog={handleAddBlog}
             />
           </Togglable>
@@ -127,13 +146,12 @@ const App = () => {
             <p>{user.name} logged-in </p>
             <button onClick={handleLogout} type="submit">logout</button>
             <h2>blogs</h2>
-            {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} />
+            {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+              <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)} handleDeleteBlog = {() => handleDeleteBlog(blog)} loggedUser = {user.username}/>
             )}
           </div>
         </div>}
     </div>
-
   )
 }
 

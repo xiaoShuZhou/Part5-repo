@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 
 
-const AddBlogForm = ({handleAddBlog}) => {
+const AddBlogForm = ({ handleAddBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')

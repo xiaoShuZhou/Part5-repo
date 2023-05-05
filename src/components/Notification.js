@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react'
 
 const Notification = ({ notification }) => {
-  console.log("Notification: ", notification);
+  console.log('Notification: ', notification)
   if (notification === null) {
-    return null;
+    return null
   }
-  
+
   return (
     <div className={notification.type}>
       {notification.text}
@@ -13,4 +13,4 @@ const Notification = ({ notification }) => {
   )
 }
 
-export default Notification;
+export default Notification
