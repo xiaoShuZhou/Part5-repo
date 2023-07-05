@@ -14,11 +14,6 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
 
-  // const [title, setTitle] = useState('')
-  // const [author, setAuthor] = useState('')
-  // const [url, setUrl] = useState('')
-  // const [likes, setLikes] = useState('')
-
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
@@ -82,28 +77,7 @@ const App = () => {
       )
     )
   }
-  // const handleAddBlog = async (event) => {
-  //   event.preventDefault()
-  //   const blogObject = {
-  //     title: title,
-  //     author: author,
-  //     url: url,
-  //     likes: likes
-  //   }
-  //   const returnedBlog = await blogService.create(blogObject)
-  //   setBlogs(blogs.concat(returnedBlog))
-  //   setTitle('')
-  //   setAuthor('')
-  //   setUrl('')
-  //   setLikes('')
-  //   setNotification({
-  //     type: 'success',
-  //     text: `a new blog ${title} by ${author} added`
-  //   })
-  //   setTimeout(() => {
-  //     setNotification(null)
-  //   }, 5000)
-  // }
+
   const handleAddBlog = async (blogObject) => {
     const returnedBlog = await blogService.create(blogObject)
     returnedBlog.user = {
